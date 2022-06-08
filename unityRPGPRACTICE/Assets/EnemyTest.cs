@@ -17,6 +17,8 @@ public class EnemyTest : MonoBehaviour
     //«ÿ∞Ò¿Ã ∫ª ≈∏∞Ÿ
     public GameObject targetCharacter = null;
 
+
+
     //«ÿ∞Ò¿Ã ∫ª ≈∏∞Ÿø° ¿ßƒ°¡§∫∏
     public Transform targetTransform = null;
 
@@ -56,6 +58,16 @@ public class EnemyTest : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    void Damage(int damage)
+    {
+        hp -= damage;
+        if (hp < 0)
+        {
+            gameObject.SetActive(false);
+        }
+        Debug.Log("«—¥Î∏¶ √∆¥Ÿ");
     }
 
     void SetIdle()

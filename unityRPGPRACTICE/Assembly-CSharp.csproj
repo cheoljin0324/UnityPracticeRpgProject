@@ -63,6 +63,7 @@
     <Compile Include="Assets\Free_Rocks\Standard Assets\Effects\ImageEffects\Scripts\ContrastEnhance.cs" />
     <Compile Include="Assets\Free_Rocks\Standard Assets\Effects\ImageEffects\Scripts\Blur.cs" />
     <Compile Include="Assets\Free_Rocks\Standard Assets\Effects\ImageEffects\Scripts\SunShafts.cs" />
+    <Compile Include="Assets\cameraCtrl.cs" />
     <Compile Include="Assets\Free_Rocks\Standard Assets\Effects\ImageEffects\Scripts\PostEffectsHelper.cs" />
     <Compile Include="Assets\Supercyan Character Pack Free Sample\Scripts\DemoFree.cs" />
     <Compile Include="Assets\Supercyan Character Pack Free Sample\Scripts\SimpleSampleCharacterControl.cs" />
@@ -99,7 +100,9 @@
     <Compile Include="Assets\Free_Rocks\Standard Assets\Effects\ImageEffects\Scripts\Grayscale.cs" />
     <Compile Include="Assets\Free_Rocks\Standard Assets\Effects\ImageEffects\Scripts\ColorCorrectionRamp.cs" />
     <Compile Include="Assets\Free_Rocks\Standard Assets\Effects\ImageEffects\Scripts\Triangles.cs" />
-    <Compile Include="Assets\cameraCtrl.cs" />
+    <Compile Include="Assets\OnTrap.cs" />
+    <Compile Include="Assets\SetTrap.cs" />
+    <Compile Include="Assets\AttackBlade.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Free_Rocks\Standard Assets\Effects\ImageEffects\Shaders\Tonemapper.shader" />
