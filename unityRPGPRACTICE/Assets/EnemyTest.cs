@@ -72,19 +72,13 @@ public class EnemyTest : MonoBehaviour
 
     void SetIdle()
     {
-        //임의 좌표 설정
         if (targetCharacter == null)
         {
             posTarget = new Vector3(skullTransform.position.x + Random.Range(-10f, 10f), skullTransform.position.y + 1000f, skullTransform.position.z + Random.Range(-10f, 10f));
 
 
-            //y값 Raycast로 구하기
             Ray ray = new Ray(posTarget, Vector3.down);
-
-            //충돌체 O
             RaycastHit infoRayCast = new RaycastHit();
-
-            //충돌체 여부 확인
             if (Physics.Raycast(ray, out infoRayCast, Mathf.Infinity) == true)
             {
                 posTarget.y = infoRayCast.point.y;
@@ -102,10 +96,7 @@ public class EnemyTest : MonoBehaviour
     /// </summary>
     void SetMove()
     {
-        //출발점과 도착점 두 벡터의 차이 
         Vector3 distance = Vector3.zero;
-
-        //어느방향을 보고 있는가?
         Vector3 posLookAt = Vector3.zero;
 
         switch (enemyState)
@@ -138,17 +129,12 @@ public class EnemyTest : MonoBehaviour
                 break;
         }
 
-        //공동요소 이동
-        //이동방향
         Vector3 direction = distance.normalized;
-        //방향x,z,y를 사용하면 땅속으로 이동 그래서 0
         direction = new Vector3(direction.x, 0f, direction.z);
-        //이동량과 방향을 구하고
         Vector3 amount = direction * spdMove * Time.deltaTime;
 
-        //해골 이동 
+
         skullTransform.Translate(amount, Space.World);
-        //해골 방향
         skullTransform.LookAt(posLookAt);
     }
 
@@ -159,28 +145,18 @@ public class EnemyTest : MonoBehaviour
     /// </summary>
     IEnumerator SetWait()
     {
-        //해골 상태를 관찰 상태로 바꿔줌
         enemyState = EnemyState.Wait;
-        //관찰하는 대기시간 
         float timeWait = Random.RandomRange(1f, 3f);
-        //관찰시간을 적용
         yield return new WaitForSeconds(timeWait);
-        //원래대로 모드 변경
         enemyState = EnemyState.Idle;
     }
 
     void SetAtk()
     {
-        //To Be Next Tiem...
-
-        //트리거에 충돌한 태그가
-
         float distance = Vector3.Distance(targetTransform.position, skullTransform.position);
 
-        //공격거리보다 둘의 거리가 멀어졌다면
         if (distance > atkRange + 0.5f)
         {
-            //타겟과의 거리가 멀어졌다면 다시 타겟으로 이동
             enemyState = EnemyState.GoTarget;
         }
     }
