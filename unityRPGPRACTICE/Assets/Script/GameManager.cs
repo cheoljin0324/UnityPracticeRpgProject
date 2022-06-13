@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class User
@@ -19,7 +20,23 @@ public class GameManager : MonoSingleton<GameManager>
 {
     public User userData;
 
+    public static GameManager Instance;
 
+    private void Awake()
+    {
+        if(Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    public void Loaded()
+    {
+        SceneManager.LoadScene("Shop");
+    }
 
     public void SaveToJson()
     {
@@ -39,7 +56,6 @@ public class GameManager : MonoSingleton<GameManager>
     IEnumerator Wait()
     {
         yield return new WaitForSeconds(1f);
-        userData.AttackLevel = 2;
         SaveToJson();
     }
 

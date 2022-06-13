@@ -1675,6 +1675,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a97df31a073a47f4a89cbb88cc6f6fbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  userData:
+    AttackLevel: 1
+    HPLevel: 1
+    AGILevel: 1
+    Item1: 0
+    Item2: 0
+    Item3: 0
+    Item4: 0
 --- !u!4 &225581534
 Transform:
   m_ObjectHideFlags: 0
@@ -8773,19 +8781,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 225581533}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: EndState
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 380494721}
-        m_TargetAssemblyTypeName: ShopCanvasManager, Assembly-CSharp
-        m_MethodName: OffShop
+        m_MethodName: Loaded
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
