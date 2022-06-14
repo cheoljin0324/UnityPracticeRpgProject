@@ -18,9 +18,16 @@ public class User
 
 public class GameManager : MonoSingleton<GameManager>
 {
+    [SerializeField]
+    ShopCanvasManager shopManager;
+
     public User userData;
 
+    public int NowStage = 1;
+    public int MobAmount;
+
     public static GameManager Instance;
+    public List<GameObject> EnemyObList;
 
     private void Awake()
     {
@@ -31,6 +38,11 @@ public class GameManager : MonoSingleton<GameManager>
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    public void SetRemoveEnemy(GameObject Enemyobject)
+    {
+        EnemyObList.Remove(Enemyobject);
     }
 
     public void Loaded()
@@ -51,6 +63,11 @@ public class GameManager : MonoSingleton<GameManager>
             Directory.CreateDirectory(filepath+"/SaveData");
         }
         File.WriteAllText(path+"/SaveData.Json", ToJsonData);
+    }
+
+    public void SetMobAmount()
+    {
+        MobAmount = Random.RandomRange(NowStage + 1, NowStage + 4);
     }
 
     IEnumerator Wait()
@@ -78,7 +95,7 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    public enum GameState {Default ,StartGame , Gaming , EndGame}
+    public enum GameState {Default ,StartGame , Gaming , EndGame, freshTime}
     GameState nowState = GameState.Default;
 
     public void NowGamingState()
@@ -94,6 +111,13 @@ public class GameManager : MonoSingleton<GameManager>
     public void EndState()
     {
         nowState = GameState.EndGame;
+        NowStage++;
+    }
+
+    public void freshTime()
+    {
+        nowState = GameState.freshTime;
+        shopManager.SetShop();
     }
 
 }

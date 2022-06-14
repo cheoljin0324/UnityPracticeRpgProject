@@ -14,7 +14,7 @@ public class InstantiateObject : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(EnemyInst());
+        EnemyInst();
     }
 
     private void Update()
@@ -22,14 +22,16 @@ public class InstantiateObject : MonoBehaviour
         if(EndElement==true && EnemyList.Count == 0)
         {
             Debug.Log("스테이지 클리어");
+            GameManager.Instance.EndState();
+            GameManager.Instance.freshTime();
+            EndElement = false;
         }
     }
 
-    IEnumerator EnemyInst()
+    void EnemyInst()
     {
-        while (EnemyList.Count!=nowStageMob)
+       for(int i = 0; i<3; i++)
         {
-            yield return new WaitForSeconds(10f);
             GameObject EnemyOb = Instantiate(Enemy);
             EnemyOb.transform.position = transform.position;
             EnemyList.Add(EnemyOb);
@@ -40,12 +42,13 @@ public class InstantiateObject : MonoBehaviour
             EnemyOb.GetComponent<EnemyTest>().ID = EnemyList.Count;
 
             Debug.Log(EnemyOb.GetComponent<EnemyTest>().ID);
+            GameManager.Instance.EnemyObList.Add(EnemyOb);
         }
         EndElement = true;
     }
 
-    void SetRemoveList(int i)
+    void SetRemoveList(GameObject EnemyOb)
     {
-        EnemyList.RemoveAt(i-1);
+        EnemyList.Remove(EnemyOb);
     }
 }

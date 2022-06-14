@@ -51,6 +51,9 @@ public class Test : MonoBehaviour
     //캐릭터 멈춤 변수 플래그
     private bool stopMove = false;
 
+    public bool isQMove = false;
+
+
     void Start()
     {
         //CharacterController 캐싱
@@ -76,8 +79,7 @@ public class Test : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Shop.isShop == false)
-        {
+     
             if (Hp == 0)
             {
                 gameObject.SetActive(false);
@@ -91,15 +93,21 @@ public class Test : MonoBehaviour
             //중력 적용
             setGravity();
 
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.D))
+            if (Input.GetAxis("Horizontal")!=0||Input.GetAxis("Vertical")!=0)
             {
                 playerState = PlayerState.Move;
                 Getanim.SetBool("isMove", true);
+                isQMove = true;
+                if(Input.GetAxis("Vertical") < 0)
+                {
+                isQMove = false;
+                }
             }
-            else if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.D))
+            else if (Input.GetAxis("Horizontal")==0 && Input.GetAxis("Vertical") == 0)
             {
                 playerState = PlayerState.Idle;
                 Getanim.SetBool("isMove", false);
+                isQMove = false;
             }
 
             if (Input.GetMouseButtonDown(0))
@@ -111,8 +119,8 @@ public class Test : MonoBehaviour
             {
                 playerState = PlayerState.Idle;
                 Getanim.SetBool("isAttack", false);
-            }
         }
+
        
     }
 

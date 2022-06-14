@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyTest : MonoBehaviour
 {
     public int ID;
+    private GameManager gameManager;
 
     public GameObject InstOb;
 
@@ -42,6 +43,7 @@ public class EnemyTest : MonoBehaviour
     {
         //첫 모드
         enemyState = EnemyState.Idle;
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         skullTransform = GetComponent<Transform>();
     }
 
@@ -64,13 +66,18 @@ public class EnemyTest : MonoBehaviour
         }
     }
 
-    void Damage(int damage)
+    public void Damage(int damage)
     {
         hp -= damage;
         if (hp < 0)
         {
-            InstOb.SendMessage("SetRemoveList", ID);
+            InstOb.SendMessage("SetRemoveList", gameObject);
+            gameManager.SetRemoveEnemy(gameObject);
             Destroy(gameObject);
+            if (GameManager.Instance.EnemyObList.Count == 0)
+            {
+                GameManager.Instance.EndState();
+            }
         }
         Debug.Log("한대를 쳤다");
     }

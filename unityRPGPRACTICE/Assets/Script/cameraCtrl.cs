@@ -14,6 +14,8 @@ public class cameraCtrl : MonoBehaviour
     //player transform 캐싱
     private Transform objTargetTransform;
 
+    float posY = 0;
+
   
     [Header("3인칭 카메라")]
     //떨어진 거리
@@ -27,7 +29,19 @@ public class cameraCtrl : MonoBehaviour
     public float rotationDamping = 3.0f;
 
     private void LateUpdate()
-    { 
+    {
+        if (Input.GetMouseButton(1))
+        {
+            posY = Input.mousePosition.y/1000;
+            if (posY < 0)
+            {
+                posY = 0;
+            }
+        }
+        else
+        {
+            posY = 0;
+        }
       ThirdCamera();
     }
 
@@ -67,10 +81,18 @@ public class cameraCtrl : MonoBehaviour
 
         //유니티 각도로 변경
         Quaternion nowRotation = Quaternion.Euler(0f, nowRotationAngle, 0f);
-
-        if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") < 0)
+        if (objTarget.GetComponent<Test>().isQMove == true)
         {
-            nowRotation = Quaternion.Euler(0f, 0, 0f);
+            nowRotation = Quaternion.Euler(0f, nowRotationAngle, 0f);
+            if (Input.GetAxis("Vertical") == 0)
+            {
+                nowRotation = Quaternion.Euler(0f, 0f, 0f);
+            }
+        }
+
+        else if (objTarget.GetComponent<Test>().isQMove == false)
+        {
+            nowRotation = Quaternion.Euler(0f, 0f, 0f);
         }
 
         //카메라 위치 포지션 이동
@@ -78,7 +100,7 @@ public class cameraCtrl : MonoBehaviour
         cameraTransform.position -= nowRotation * Vector3.forward;
 
         //최종이동
-        cameraTransform.position = new Vector3(cameraTransform.position.x, nowHeight, cameraTransform.position.z-1);
+        cameraTransform.position = new Vector3(cameraTransform.position.x, nowHeight+posY, cameraTransform.position.z-1);
         cameraTransform.LookAt(objTargetTransform);
     }
 }
