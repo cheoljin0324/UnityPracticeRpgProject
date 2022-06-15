@@ -10,6 +10,7 @@ public class Test : MonoBehaviour
 
     [SerializeField]
     public ShopCanvasManager Shop;
+    ItemDataBase itemData;
 
     public int Hp = 3;
     public int attack = 30;
@@ -53,12 +54,36 @@ public class Test : MonoBehaviour
 
     public bool isQMove = false;
 
+    public bool SetI = false;
+
 
     void Start()
     {
+        itemData = GameObject.Find("ItemDataBase").GetComponent<ItemDataBase>();
         //CharacterController 캐싱
         controllerCharacter = GetComponent<CharacterController>();
         Getanim = GetComponent<Animator>();
+        
+        ItemSetting();
+    }
+
+    public void ItemSetting()
+    {
+        for(int i = 0; i<itemData.setItem.Length; i++)
+        {
+            if (itemData.setItem[i].isUse == true)
+            {
+                itemData.setItem[i].Item.SetActive(true);
+                SetI = true;
+            }
+        }
+        if (SetI == false)
+        {
+            GameManager.Instance.userData.isUse[0] = true;
+            itemData.setItem[0].isUse = true;
+            itemData.setItem[0].Item.SetActive(true);
+
+        }
     }
 
     private void OnGUI()
@@ -79,7 +104,8 @@ public class Test : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-     
+        if (GameManager.Instance.nowState == GameManager.GameState.Gaming)
+        {
             if (Hp == 0)
             {
                 gameObject.SetActive(false);
@@ -93,17 +119,17 @@ public class Test : MonoBehaviour
             //중력 적용
             setGravity();
 
-            if (Input.GetAxis("Horizontal")!=0||Input.GetAxis("Vertical")!=0)
+            if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
             {
                 playerState = PlayerState.Move;
                 Getanim.SetBool("isMove", true);
                 isQMove = true;
-                if(Input.GetAxis("Vertical") < 0)
+                if (Input.GetAxis("Vertical") < 0)
                 {
-                isQMove = false;
+                    isQMove = false;
                 }
             }
-            else if (Input.GetAxis("Horizontal")==0 && Input.GetAxis("Vertical") == 0)
+            else if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
             {
                 playerState = PlayerState.Idle;
                 Getanim.SetBool("isMove", false);
@@ -119,9 +145,8 @@ public class Test : MonoBehaviour
             {
                 playerState = PlayerState.Idle;
                 Getanim.SetBool("isAttack", false);
+            }
         }
-
-       
     }
 
     void Move()

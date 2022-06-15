@@ -10,15 +10,13 @@ public class User
     public int AttackLevel = 1;
     public int HPLevel = 1;
     public int AGILevel = 1;
-    public bool Item1 = false;
-    public bool Item2 = false;
-    public bool Item3 = false;
-    public bool Item4 = false;
+    public int coin = 100;
+    public bool[] Item = new bool[10];
+    public bool[] isUse = new bool[10];
 }
 
 public class GameManager : MonoSingleton<GameManager>
 {
-    [SerializeField]
     ShopCanvasManager shopManager;
 
     public User userData;
@@ -78,14 +76,12 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Start()
     {
-        SaveToJson();
-        StartCoroutine(Wait());
+        LoadToJson();
     }
 
     public void LoadToJson()
     {
-        string path = Application.dataPath + "/SaveData";
-        string ToJsonData = JsonUtility.ToJson(userData);
+        string path = Application.dataPath + "/SaveData/SaveData.Json";
 
         if (File.Exists(path))
         {
@@ -96,7 +92,7 @@ public class GameManager : MonoSingleton<GameManager>
     }
 
     public enum GameState {Default ,StartGame , Gaming , EndGame, freshTime}
-    GameState nowState = GameState.Default;
+    public GameState nowState = GameState.Default;
 
     public void NowGamingState()
     {
@@ -117,6 +113,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void freshTime()
     {
         nowState = GameState.freshTime;
+        shopManager = GameObject.Find("ShopManager").GetComponent<ShopCanvasManager>();
         shopManager.SetShop();
     }
 

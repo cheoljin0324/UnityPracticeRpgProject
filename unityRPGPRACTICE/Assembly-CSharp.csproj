@@ -71,6 +71,9 @@
     <Compile Include="Assets\Script\GameManager.cs" />
     <Compile Include="Assets\Script\SetTrap.cs" />
     <Compile Include="Assets\Supercyan Character Pack Free Sample\Scripts\FreeCameraLogic.cs" />
+    <Compile Include="Assets\Script\GameStart1.cs" />
+    <Compile Include="Assets\Script\ItemBuySet.cs" />
+    <Compile Include="Assets\Script\ItemDataBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Supercyan Character Pack Free Sample\Shaders\Legacy\CelShader.shader" />
