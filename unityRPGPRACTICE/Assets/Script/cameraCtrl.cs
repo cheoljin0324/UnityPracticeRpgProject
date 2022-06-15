@@ -21,8 +21,12 @@ public class cameraCtrl : MonoBehaviour
     //떨어진 거리
     public float distance = 6.0f;
 
+    public float mouseSet = 4.3f;
+
     //추가 높이
     public float height = 1.75f;
+
+    public float addHeight = 0f;
 
     //smooth time
     public float heightDamp = 2.0f;
@@ -30,18 +34,23 @@ public class cameraCtrl : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (Input.GetMouseButton(1))
-        {
-            posY = Input.mousePosition.y/1000;
-            if (posY < 0)
+        if (Input.GetAxis("Mouse ScrollWheel") != 0)
+        { 
+            if (addHeight < 10 || Input.GetAxis("Mouse ScrollWheel")<0)
             {
-                posY = 0;
+             
+                    Debug.Log(Input.GetAxis("Mouse ScrollWheel"));
+                    addHeight += Input.GetAxis("Mouse ScrollWheel")*mouseSet;
+
+                if (addHeight < 0)
+                {
+                    addHeight = 0;
+                }
+               
             }
         }
-        else
-        {
-            posY = 0;
-        }
+      
+      
       ThirdCamera();
     }
 
@@ -69,7 +78,7 @@ public class cameraCtrl : MonoBehaviour
 
         //현재 각도 높이
         float nowRotationAngle = cameraTransform.eulerAngles.y;
-        float nowHeight = cameraTransform.position.y;
+        float nowHeight = cameraTransform.position.y-addHeight;
 
         //현재 각도에 대한 DAMP
         nowRotationAngle = Mathf.LerpAngle(nowRotationAngle, objTargetRotationAngle, rotationDamping * Time.deltaTime);
@@ -95,12 +104,18 @@ public class cameraCtrl : MonoBehaviour
             nowRotation = Quaternion.Euler(0f, 0f, 0f);
         }
 
+        if (addHeight > 0)
+        {
+            nowRotation = Quaternion.Euler(0f, 0f, 0f);
+        }
+
         //카메라 위치 포지션 이동
         cameraTransform.position = objTargetTransform.position;
         cameraTransform.position -= nowRotation * Vector3.forward;
 
         //최종이동
-        cameraTransform.position = new Vector3(cameraTransform.position.x, nowHeight+posY, cameraTransform.position.z-1);
+        cameraTransform.position = new Vector3(cameraTransform.position.x, nowHeight+addHeight, cameraTransform.position.z-1);
+
         cameraTransform.LookAt(objTargetTransform);
     }
 }

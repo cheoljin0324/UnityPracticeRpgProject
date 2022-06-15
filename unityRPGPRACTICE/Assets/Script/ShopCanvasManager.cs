@@ -25,11 +25,6 @@ public class ShopCanvasManager : MonoSingleton<ShopCanvasManager>
 
     public List<GameObject> ItemMemeber;
 
-    public void LoadSample()
-    {
-        SceneManager.LoadScene("SampleScene");
-    }
-
     private void Start()
     {
         back = transform;
