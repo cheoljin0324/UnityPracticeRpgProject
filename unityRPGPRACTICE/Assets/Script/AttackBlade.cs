@@ -12,7 +12,7 @@ public class AttackBlade : MonoBehaviour
     }
 
     private void Update()
-    {
+    { 
         if (Input.GetKeyDown(KeyCode.Q))
         {
             Skill1();
@@ -21,7 +21,7 @@ public class AttackBlade : MonoBehaviour
 
     protected virtual void Skill1()
     {
-        Debug.Log("½ºÅ³1");
+        Debug.Log("skill1 Active");
     }
 
     private void OnTriggerEnter(Collider other)

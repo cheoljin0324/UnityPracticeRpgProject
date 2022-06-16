@@ -4,28 +4,29 @@ using UnityEngine;
 
 public class cameraCtrl : MonoBehaviour
 {
-    [Header("Ä«¸Þ¶ó ±âº» ¼Ó¼º")]
-    //Ä«¸Þ¶ó À§Ä¡ Ä³½Ì ÁØºñ
+    [Header("CameraPos")]
+    //CameraPos
     private Transform cameraTransform;
 
     //target
     public GameObject objTarget;
 
-    //player transform Ä³½Ì
+    //player transform 
     private Transform objTargetTransform;
 
     float posY = 0;
 
   
-    [Header("3ÀÎÄª Ä«¸Þ¶ó")]
-    //¶³¾îÁø °Å¸®
+    [Header("distance")]
+    //ObjectDistance
     public float distance = 6.0f;
 
     public float mouseSet = 4.3f;
 
-    //Ãß°¡ ³ôÀÌ
+    //ObjectHeight
     public float height = 1.75f;
 
+    //mouse addHeight
     public float addHeight = 0f;
 
     //smooth time
@@ -66,29 +67,29 @@ public class cameraCtrl : MonoBehaviour
     }
 
     /// <summary>
-    /// 3ÀÎÄª Ä«¸Þ¶ó ±âº» µ¿ÀÛ ÇÔ¼ö
+    /// 3ï¿½ï¿½Äª Ä«ï¿½Þ¶ï¿½ ï¿½âº» ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
     /// </summary>
     void ThirdCamera()
     {
-        //ÇöÀç Å¸°Ù YÃà °¢µµ °ª
+        //ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ Yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
         float objTargetRotationAngle = objTargetTransform.eulerAngles.y;
 
-        //ÇöÀç Å¸°Ù ³ôÀÌ + Ä«¸Þ¶ó°¡ À§Ä¡ÇÑ ³ôÀÌ Ãß°¡ ³ôÀÌ
+        //ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ + Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½
         float objHeight = objTargetTransform.position.y + height;
 
-        //ÇöÀç °¢µµ ³ôÀÌ
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         float nowRotationAngle = cameraTransform.eulerAngles.y;
         float nowHeight = cameraTransform.position.y-addHeight;
 
-        //ÇöÀç °¢µµ¿¡ ´ëÇÑ DAMP
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ DAMP
         nowRotationAngle = Mathf.LerpAngle(nowRotationAngle, objTargetRotationAngle, rotationDamping * Time.deltaTime);
 
-        //ÇöÀç ³ôÀÌ¿¡ ´ëÇÑ DAMP
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¿ï¿½ ï¿½ï¿½ï¿½ï¿½ DAMP
         nowHeight = Mathf.Lerp(nowHeight, objHeight, heightDamp * Time.deltaTime);
 
 
 
-        //À¯´ÏÆ¼ °¢µµ·Î º¯°æ
+        //ï¿½ï¿½ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         Quaternion nowRotation = Quaternion.Euler(0f, nowRotationAngle, 0f);
         if (objTarget.GetComponent<Test>().isQMove == true)
         {
@@ -109,11 +110,11 @@ public class cameraCtrl : MonoBehaviour
             nowRotation = Quaternion.Euler(0f, 0f, 0f);
         }
 
-        //Ä«¸Þ¶ó À§Ä¡ Æ÷Áö¼Ç ÀÌµ¿
+        //Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
         cameraTransform.position = objTargetTransform.position;
         cameraTransform.position -= nowRotation * Vector3.forward;
 
-        //ÃÖÁ¾ÀÌµ¿
+        //ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½
         cameraTransform.position = new Vector3(cameraTransform.position.x, nowHeight+addHeight, cameraTransform.position.z-1);
 
         cameraTransform.LookAt(objTargetTransform);

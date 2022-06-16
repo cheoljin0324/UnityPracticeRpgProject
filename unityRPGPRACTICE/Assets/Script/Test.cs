@@ -5,8 +5,7 @@ using DG.Tweening;
 
 public class Test : MonoBehaviour
 {
-
-    public enum PlayerState {None, Idle , Move, Attack, Dmage}
+    public enum PlayerState {None, Idle , Move, Attack, Dmage, Die}
 
     [SerializeField]
     public ShopCanvasManager Shop;
@@ -16,42 +15,42 @@ public class Test : MonoBehaviour
     public int attack = 30;
     public string name = "player";
 
-    //ÇöÀç Ä³¸¯ÅÍ ÀÌµ¿ ¹éÅÍ °ª 
+    
     private Vector3 vecNowVelocity = Vector3.zero;
 
-    //ÇöÀç Ä³¸¯ÅÍ ÀÌµ¿ ¹æÇâ º¤ÅÍ 
+    //ì›€ì§ì´ëŠ” ìœ„ì¹˜
     private Vector3 vecMoveDirection = Vector3.zero;
 
     PlayerState playerState = PlayerState.None;
     Animator Getanim;
 
-    //Ä³¸¯ÅÍ Á÷¼± ÀÌµ¿ ¼Óµµ (°È±â)
+    //ê±·ëŠ” ì›€ì§ì„ ì†ë„
     public float walkMoveSpd = 2.0f;
 
-    //Ä³¸¯ÅÍ È¸Àü ÀÌµ¿ ¼Óµµ 
+    //íšŒì „ ì†ë„
     public float rotateMoveSpd = 100.0f;
 
-    //Ä³¸¯ÅÍ È¸Àü ¹æÇâÀ¸·Î ¸öÀ» µ¹¸®´Â ¼Óµµ
+    //íšŒì „í•˜ëŠ” í•˜ëŠ” ì†ë„
     public float rotateBodySpd = 2.0f;
 
-    //Ä³¸¯ÅÍ ÀÌµ¿ ¼Óµµ Áõ°¡ °ª
+    //ì›€ì§ì„ì´ ë°”ë€ŒëŠ” ì†ë„
     public float moveChageSpd = 0.1f;
 
-    //CharacterController Ä³½Ì ÁØºñ
+    //ìºë¦­í„° ì»¨íŠ¸ë¡¤ëŸ¬ ì»´í¬ë„ŒíŠ¸
     private CharacterController controllerCharacter = null;
 
-    //Ä³¸¯ÅÍ CollisionFlags ÃÊ±â°ª ¼³Á¤
+    //í”Œë˜ê·¸
     private CollisionFlags collisionFlagsCharacter = CollisionFlags.None;
 
-    //Ä³¸¯ÅÍ Áß·Â°ª
+    //ì¤‘ë ¥
     private float gravity = 9.8f;
 
-    //Ä³¸¯ÅÍ Áß·Â ¼Óµµ °ª
+    //í˜„ì¬ ìŠ¤í”¼ë“œ
     private float verticalSpd = 0f;
 
-    //Ä³¸¯ÅÍ ¸ØÃã º¯¼ö ÇÃ·¡±×
+    //ì›€ì§ì„ì„ ë©ˆì·„ëŠ”ê°€?
     private bool stopMove = false;
-
+    //íšŒì „ í•˜ëŠ”ê°€?
     public bool isQMove = false;
 
     public bool SetI = false;
@@ -60,7 +59,6 @@ public class Test : MonoBehaviour
     void Start()
     {
         itemData = GameObject.Find("ItemDataBase").GetComponent<ItemDataBase>();
-        //CharacterController Ä³½Ì
         controllerCharacter = GetComponent<CharacterController>();
         Getanim = GetComponent<Animator>();
         
@@ -102,15 +100,13 @@ public class Test : MonoBehaviour
         labelStyle.fontSize = 50;
         labelStyle.normal.textColor = Color.black;
 
-        GUILayout.Label("Ã¼·Â : " + Hp.ToString(),labelStyle);
+        GUILayout.Label("ì²´ë ¥ : " + Hp.ToString(),labelStyle);
 
-        //ÇöÀç Ä³¸¯ÅÍ ¹æÇâ + Å©±â
-        GUILayout.Label("°ø°İ·Â : " + attack.ToString(), labelStyle);
+        GUILayout.Label("ê³µê²©ë ¥ : " + attack.ToString(), labelStyle);
 
-        //ÇöÀç  Àç¹éÅÍ Å©±â ¼Óµµ
-        GUILayout.Label("ÇÃ·¹ÀÌ¾î ÀÌ¸§ : " + name, labelStyle);
+        GUILayout.Label("ì´ë¦„ : " + name, labelStyle);
 
-        GUILayout.Label("º¸À¯ ÄÚÀÎ:" + GameManager.Instance.userData.coin, labelStyle);
+        GUILayout.Label("í˜„ì¬ ê°–ê³  ìˆëŠ” ì½”ì¸:" + GameManager.Instance.userData.coin, labelStyle);
     }
 
     // Update is called once per frame
@@ -121,14 +117,11 @@ public class Test : MonoBehaviour
             if (Hp == 0)
             {
                 gameObject.SetActive(false);
+                playerState = PlayerState.Die;
             }
-            //Ä³¸¯ÅÍ ÀÌµ¿ 
             Move();
-            // Debug.Log(getNowVelocityVal());
-            //Ä³¸¯ÅÍ ¹æÇâ º¯°æ 
             vecDirectionChangeBody();
 
-            //Áß·Â Àû¿ë
             setGravity();
 
             if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
@@ -168,33 +161,30 @@ public class Test : MonoBehaviour
             return;
         }
         Transform CameraTransform = Camera.main.transform;
-        //¸ŞÀÎ Ä«¸Ş¶ó°¡ ¹Ù¶óº¸´Â ¹æÇâÀÌ ¿ùµå»ó¿¡ ¾î¶² ¹æÇâÀÎ°¡.
         Vector3 forward = CameraTransform.TransformDirection(Vector3.forward);
         forward.y = 0.0f;
 
-        //forward.z, forward.x
         Vector3 right = new Vector3(forward.z, 0.0f, -forward.x);
 
-        //Å°ÀÔ·Â 
+
         float vertical = Input.GetAxis("Vertical");
         float horizontal = Input.GetAxis("Horizontal");
 
-        //ÄÉ¸¯ÅÍ°¡ ÀÌµ¿ÇÏ°íÀÚ ÇÏ´Â ¹æÇâ 
         Vector3 targetDirection = horizontal * right + vertical * forward;
 
-        //ÇöÀç ÀÌµ¿ÇÏ´Â ¹æÇâ¿¡¼­ ¿øÇÏ´Â ¹æÇâÀ¸·Î È¸Àü 
+
 
         vecMoveDirection = Vector3.RotateTowards(vecMoveDirection, targetDirection, rotateMoveSpd * Mathf.Deg2Rad * Time.deltaTime, 1000.0f);
         vecMoveDirection = vecMoveDirection.normalized;
-        //Ä³¸¯ÅÍ ÀÌµ¿ ¼Óµµ
+
         float spd = walkMoveSpd;
         spd = walkMoveSpd;
 
 
-        //Áß·ÂÀÌµ¿ 
+
         Vector3 _vecTemp = new Vector3(0f, verticalSpd, 0f);
 
-        // ÇÁ·¹ÀÓ ÀÌµ¿ ¾ç
+
         Vector3 moveAmount = (vecMoveDirection * spd * Time.deltaTime) + _vecTemp;
 
         collisionFlagsCharacter = controllerCharacter.Move(moveAmount);
@@ -204,36 +194,35 @@ public class Test : MonoBehaviour
 
     float getNowVelocityVal()
     {
-        //ÇöÀç Ä³¸¯ÅÍ°¡ ¸ØÃç ÀÖ´Ù¸é 
+
         if (controllerCharacter.velocity == Vector3.zero)
         {
-            //¹İÈ¯ ¼Óµµ °ªÀº 0
+
             vecNowVelocity = Vector3.zero;
         }
         else
         {
 
-            //¹İÈ¯ ¼Óµµ °ªÀº ÇöÀç /
+
             Vector3 retVelocity = controllerCharacter.velocity;
             retVelocity.y = 0.0f;
 
             vecNowVelocity = Vector3.Lerp(vecNowVelocity, retVelocity, moveChageSpd * Time.fixedDeltaTime);
 
         }
-        //°Å¸® Å©±â
+
         return vecNowVelocity.magnitude;
     }
 
     void vecDirectionChangeBody()
     {
-        //Ä³¸¯ÅÍ ÀÌµ¿ ½Ã
+
         if (getNowVelocityVal() > 0.0f)
         {
-            //³» ¸öÅë  ¹Ù¶óºÁ¾ß ÇÏ´Â °÷Àº ¾îµğ?
+
             Vector3 newForward = controllerCharacter.velocity;
             newForward.y = 0.0f;
-
-            //³» Ä³¸¯ÅÍ Àü¸é ¼³Á¤ 
+ 
             transform.forward = Vector3.Lerp(transform.forward, newForward, rotateBodySpd * Time.deltaTime);
 
         }

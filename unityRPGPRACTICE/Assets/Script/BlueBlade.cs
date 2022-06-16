@@ -14,7 +14,7 @@ public class BlueBlade : AttackBlade
 
     protected override void Skill1()
     {
-        Debug.Log("블루 소드 스킬");
+        Debug.Log("BlueSword Active");
     }
 
     private void OnTriggerEnter(Collider other)

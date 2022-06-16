@@ -6,7 +6,7 @@ public class OnTrap : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("This is my Trap คว");
+        Debug.Log("This is my Trap");
         gameObject.transform.parent.SendMessage("ShotTrap");
     }
 }

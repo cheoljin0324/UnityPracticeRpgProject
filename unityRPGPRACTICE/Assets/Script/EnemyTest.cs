@@ -25,7 +25,7 @@ public class EnemyTest : MonoBehaviour
     public EnemyState enemyState = EnemyState.None;
 
     //이동 속도
-    public float spdMove = 1f;
+    public float spdMove = 4f;
 
     //해골이 본 타겟
     public GameObject targetCharacter = null;
@@ -45,7 +45,7 @@ public class EnemyTest : MonoBehaviour
     //해골 체력
     public int hp = 100;
     //해골 공격 거리 및 탐지 거리
-    public float atkRange = 1.5f;
+    public float atkRange = 0f;
 
     void Start()
     {
@@ -141,6 +141,7 @@ public class EnemyTest : MonoBehaviour
                     distance = posTarget - skullTransform.position;
                     if (distance.magnitude < atkRange)
                     {
+                        Debug.Log("공격");
                         StartCoroutine(SetWait());
                         return;
                     }
@@ -151,7 +152,7 @@ public class EnemyTest : MonoBehaviour
                 if (targetCharacter != null)
                 {
                     distance = targetCharacter.transform.position - skullTransform.position;
-                    if (distance.magnitude < atkRange)
+                    if (distance.magnitude == atkRange)
                     {
                         enemyState = EnemyState.Atk;
                         return;
@@ -167,8 +168,17 @@ public class EnemyTest : MonoBehaviour
         direction = new Vector3(direction.x, 0f, direction.z);
         Vector3 amount = direction * spdMove * Time.deltaTime;
 
+        if (amount.x != 0 && amount.z != 0)
+        {
+            skullTransform.Translate(amount, Space.World);
+            Debug.Log(amount);
 
-        skullTransform.Translate(amount, Space.World);
+        }
+        else
+        {
+            skullTransform.Translate(targetCharacter.transform.position, Space.World);
+        }
+
         skullTransform.LookAt(posLookAt);
     }
 
@@ -198,5 +208,6 @@ public class EnemyTest : MonoBehaviour
     void Update()
     {
         CeckState();
+        Debug.Log(enemyState);
     }
 }
