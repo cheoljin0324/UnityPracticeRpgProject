@@ -65,13 +65,15 @@ public class Test : MonoBehaviour
         Getanim = GetComponent<Animator>();
         
         ItemSetting();
+        
     }
 
     public void ItemSetting()
     {
         for(int i = 0; i<itemData.setItem.Length; i++)
         {
-            if (itemData.setItem[i].isUse == true)
+            itemData.setItem[i].Item.SetActive(false);
+            if (GameManager.Instance.userData.isUse[i] == true)
             {
                 itemData.setItem[i].Item.SetActive(true);
                 SetI = true;
@@ -84,6 +86,14 @@ public class Test : MonoBehaviour
             itemData.setItem[0].Item.SetActive(true);
 
         }
+        for (int i = 0; i < itemData.setItem.Length; i++)
+        {
+            if (GameManager.Instance.userData.isUse[i] == true)
+            {
+                attack = itemData.setItem[i].ItemAddDamage;
+            }
+        }
+        GameManager.Instance.StartState();
     }
 
     private void OnGUI()
@@ -99,6 +109,8 @@ public class Test : MonoBehaviour
 
         //현재  재백터 크기 속도
         GUILayout.Label("플레이어 이름 : " + name, labelStyle);
+
+        GUILayout.Label("보유 코인:" + GameManager.Instance.userData.coin, labelStyle);
     }
 
     // Update is called once per frame

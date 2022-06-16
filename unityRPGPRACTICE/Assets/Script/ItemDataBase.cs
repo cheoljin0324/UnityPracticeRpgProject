@@ -21,4 +21,5 @@ public struct ItemSet
     public bool isUse;
     public GameObject Item;
     public int ItemSell;
+    public int ItemAddDamage;
 }

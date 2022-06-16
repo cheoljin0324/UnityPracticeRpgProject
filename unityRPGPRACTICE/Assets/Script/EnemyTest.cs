@@ -1,13 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyTest : MonoBehaviour
 {
     public int ID;
     private GameManager gameManager;
 
+    public GameObject Canvas;
+
+    public GameObject DamageText;
+
     public GameObject InstOb;
+
+    public int SetCoin = 50;
 
     //ÇØ°ñ ¸ðµå
     public enum EnemyState { None, Idle, Move, Wait, GoTarget, Atk, Damage, Die }
@@ -45,6 +53,7 @@ public class EnemyTest : MonoBehaviour
         enemyState = EnemyState.Idle;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         skullTransform = GetComponent<Transform>();
+        Canvas = GameObject.Find("Canvas");
     }
 
     void CeckState()
@@ -74,12 +83,25 @@ public class EnemyTest : MonoBehaviour
             InstOb.SendMessage("SetRemoveList", gameObject);
             gameManager.SetRemoveEnemy(gameObject);
             Destroy(gameObject);
+            GameManager.Instance.userData.coin += SetCoin;
             if (GameManager.Instance.EnemyObList.Count == 0)
             {
                 GameManager.Instance.EndState();
             }
         }
+        GameObject TextImpact = Instantiate(DamageText,Canvas.transform);
+        TextImpact.GetComponent<Text>().text = "-" + damage.ToString();
+        TextImpact.transform.position = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+        TextImpact.transform.DOMoveY(TextImpact.transform.position.y + 300,3f);
+        TextImpact.GetComponent<Text>().DOFade(0f, 3f);
+        StartCoroutine(DesTextDamage(TextImpact));
         Debug.Log("ÇÑ´ë¸¦ ÃÆ´Ù");
+    }
+
+    IEnumerator DesTextDamage(GameObject gameOb)
+    {
+        yield return new WaitForSeconds(3f);
+        Destroy(gameOb);
     }
 
     void SetIdle()

@@ -9,7 +9,7 @@ public class InstantiateObject : MonoBehaviour
     GameObject SetChar;
     public bool EndElement = false;
 
-    int nowStageMob = 5;
+    
     public List<GameObject> EnemyList;
 
     private void Start()
@@ -28,9 +28,10 @@ public class InstantiateObject : MonoBehaviour
         }
     }
 
-    void EnemyInst()
+    public void EnemyInst()
     {
-       for(int i = 0; i<3; i++)
+        GameManager.Instance.SetMobAmount();
+       for (int i = 0; i<GameManager.Instance.MobAmount; i++)
         {
             GameObject EnemyOb = Instantiate(Enemy);
             EnemyOb.transform.position = transform.position;
@@ -40,6 +41,7 @@ public class InstantiateObject : MonoBehaviour
             EnemyOb.GetComponent<EnemyTest>().targetTransform = SetChar.transform;
             EnemyOb.GetComponent<EnemyTest>().InstOb = gameObject;
             EnemyOb.GetComponent<EnemyTest>().ID = EnemyList.Count;
+            EnemyOb.transform.position = new Vector3(Random.RandomRange(transform.position.x - 10, transform.position.x + 10), transform.position.y, Random.RandomRange(transform.position.z - 10, transform.position.z + 10));
 
             Debug.Log(EnemyOb.GetComponent<EnemyTest>().ID);
             GameManager.Instance.EnemyObList.Add(EnemyOb);

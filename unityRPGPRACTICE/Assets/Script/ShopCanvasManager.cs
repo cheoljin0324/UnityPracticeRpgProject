@@ -13,11 +13,13 @@ public class ShopCanvasManager : MonoSingleton<ShopCanvasManager>
     [SerializeField]
     ItemDataBase ItemData;
     [SerializeField]
-    Button GameButton;
-    [SerializeField]
     GameObject Scroll;
     [SerializeField]
     GameObject GameBase;
+    [SerializeField]
+    Image gameImage;
+    [SerializeField]
+    Button OffButton;
 
     public bool isShop = false;
     public bool isFirst = true;
@@ -31,6 +33,8 @@ public class ShopCanvasManager : MonoSingleton<ShopCanvasManager>
 
     private void Start()
     {
+        GameManager.Instance.userData.Item[0] = true;
+        GameManager.Instance.SaveToJson();
         GameManager.Instance.userData.isUse[0] = true;
         for(int i = 1; i < GameManager.Instance.userData.isUse.Length; i++)
         {
@@ -53,9 +57,9 @@ public class ShopCanvasManager : MonoSingleton<ShopCanvasManager>
         }
 
         GameBase.GetComponent<Image>().DOFade(1, 1f);
-        GameButton.GetComponent<Image>().DOFade(1, 1f);
         Scroll.GetComponent<Image>().DOFade(0.3f, 1f);
-        
+        gameImage.DOFade(0.3f, 1f);
+        OffButton.image.DOFade(1f, 1f);
     }
 
     public void OffShop()
@@ -63,8 +67,9 @@ public class ShopCanvasManager : MonoSingleton<ShopCanvasManager>
         isShop = false;
         GameBase.SetActive(false);
         GameBase.GetComponent<Image>().color = new Color(1, 1, 1, 0);
-        GameButton.image.color = new Color(1, 1, 1, 0);
+        gameImage.color = new Color(1, 1, 1, 0);
         Scroll.GetComponent<Image>().color= new Color(1, 1, 1, 0);
+        OffButton.image.color = new Color(1, 1, 1, 0);
     }
 
     public void objectSet()
@@ -90,17 +95,23 @@ public class ShopCanvasManager : MonoSingleton<ShopCanvasManager>
 
     public void ButtonClick(ItemSet item,Button BuyButton)
     {
-        if (item.isBuy == true)
+        if (GameManager.Instance.userData.Item[item.ItemID] == true)
         {
-            if (item.isUse == false)
+            if (GameManager.Instance.userData.isUse[item.ItemID] == false)
             {
                 for (int i = 0; i < ItemData.setItem.Length; i++)
                 {
                     ItemData.setItem[i].isUse = false;
+                    GameManager.Instance.userData.isUse[i] = false;
                 }
                 item.isUse = true;
                 GameManager.Instance.userData.isUse[item.ItemID] = true;
                 GameManager.Instance.SaveToJson();
+                for(int i = 0; i<ItemMemeber.Count; i++)
+                {
+                    ItemMemeber[i].GetComponentsInChildren<Button>()[1].image.color = Color.red;
+                }
+                BuyButton.image.color = Color.blue;
             }
             
         }
@@ -109,6 +120,7 @@ public class ShopCanvasManager : MonoSingleton<ShopCanvasManager>
             if (item.ItemSell < GameManager.Instance.userData.coin)
             {
                 item.isBuy = true;
+                GameManager.Instance.userData.coin -= item.ItemSell;
                 Debug.Log("아이템을 구매 했습니다.");
                 GameManager.Instance.userData.Item[item.ItemID] = true;
                 GameManager.Instance.SaveToJson();

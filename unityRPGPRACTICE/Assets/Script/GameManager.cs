@@ -11,6 +11,7 @@ public class User
     public int HPLevel = 1;
     public int AGILevel = 1;
     public int coin = 100;
+    public int nowStage = 1;
     public bool[] Item = new bool[10];
     public bool[] isUse = new bool[10];
 }
@@ -21,7 +22,11 @@ public class GameManager : MonoSingleton<GameManager>
 
     public User userData;
 
-    public int NowStage = 1;
+    [SerializeField]
+    private List<Transform> Setting;
+    private GameObject Player;
+
+    public int usingMap;
     public int MobAmount;
 
     public static GameManager Instance;
@@ -29,13 +34,15 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Awake()
     {
-        if(Instance != null)
+
+        if (Instance != null)
         {
             Destroy(gameObject);
             return;
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        SetMobAmount();
     }
 
     public void SetRemoveEnemy(GameObject Enemyobject)
@@ -65,7 +72,8 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void SetMobAmount()
     {
-        MobAmount = Random.RandomRange(NowStage + 1, NowStage + 4);
+        MobAmount = Random.RandomRange(userData.nowStage + 1, userData.nowStage + 4);
+        usingMap = 0;
     }
 
     IEnumerator Wait()
@@ -101,13 +109,29 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void StartState()
     {
+        if (Setting.Count == 0)
+        {
+            for(int i = 1; i<GameObject.Find("Pos").GetComponentsInChildren<Transform>().Length; i++)
+            {
+                Setting.Add(GameObject.Find("Pos").GetComponentsInChildren<Transform>()[i]);
+            }
+        }
         nowState = GameState.StartGame;
+        GameSetting();
+    }
+
+    void GameSetting()
+    {
+        Player = GameObject.Find("Player");
+        Debug.Log(usingMap);
+        Player.transform.position = Setting[usingMap].position;
+        NowGamingState();
     }
 
     public void EndState()
     {
         nowState = GameState.EndGame;
-        NowStage++;
+        userData.nowStage++;
     }
 
     public void freshTime()

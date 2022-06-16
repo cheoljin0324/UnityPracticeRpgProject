@@ -193,8 +193,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 0
-  gameManager: {fileID: 0}
+  Canvas: {fileID: 0}
+  DamageText: {fileID: 8575770540955639177, guid: 8a7c912845db49a4a8f72d7126c47e27, type: 3}
   InstOb: {fileID: 0}
+  SetCoin: 50
   enemyState: 0
   spdMove: 1
   targetCharacter: {fileID: 0}

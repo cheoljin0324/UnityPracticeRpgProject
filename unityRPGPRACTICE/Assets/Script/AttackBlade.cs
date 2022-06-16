@@ -11,6 +11,19 @@ public class AttackBlade : MonoBehaviour
         PlayerT = GetComponentInParent<Test>();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Skill1();
+        }
+    }
+
+    protected virtual void Skill1()
+    {
+        Debug.Log("½ºÅ³1");
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
